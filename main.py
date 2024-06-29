@@ -4,7 +4,8 @@ def main():
         file_contents = f.read()
         word_count = count_words(file_contents)
         char_count = count_characters(file_contents)
-        generate_report(char_count, word_count, book)
+        sorted_char_count = sort_chars_dict(char_count)
+        generate_report(sorted_char_count, word_count, book)
 
 def count_words(content):
     
@@ -20,7 +21,7 @@ def count_characters(content):
     chars_dict = {}
 
     for i in content:
-        lowered = content.lower()
+        lowered = i.lower()
         if lowered in chars_dict:
             chars_dict[lowered] += 1
         else:
@@ -28,19 +29,27 @@ def count_characters(content):
 
     return chars_dict
     
-def generate_report(alphabet, word_count, book_name):
+def generate_report(sorted_chars, word_count, book_name):
     print(f"--- Report of {book_name} ---\n{word_count} words found")
     
-    word_list = []
-    for i in alphabet:
-        char_dict = {alphabet[i]}
-        word_list.append(char_dict);
-    
-    word_list.sort(reverse=True, key=sort_on)
-    print(word_list)
+
+    for i in sorted_chars:
+        if not i["char"].isalpha():
+            continue
+        print(f"The '{i['char']}' character was found {i['num']} times.")
+
+    print("--- End Report ---") 
 
 
 def sort_on(dictionary):
-    return dictionary[0];
+    return dictionary['num'];
+
+def sort_chars_dict(chars):
+    word_list = []
+    for char in chars:
+        word_list.append({"char": char, "num": chars[char]})
+
+    word_list.sort(reverse=True, key=sort_on)
+    return word_list
 
 main()
